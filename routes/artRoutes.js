@@ -1,8 +1,9 @@
 const express = require("express");
-const { addArt } = require("../Controllers/artController");
+const { addArt, getArts } = require("../Controllers/artController");
 
 const router = express.Router();
 
+router.get("/", getArts);
 router.post("/", addArt);
 
 module.exports = router;
