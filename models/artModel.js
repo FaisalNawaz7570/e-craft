@@ -5,7 +5,8 @@ const artSchema = new mongoose.Schema(
     title: String, // my first art
     description: String, // my short description
     cost: Number, // 295 dollar
-    resolution: String, //1920 x 1080
+    resolutionHeight: Number,
+    resolutionWidth: Number,
     likes: Number, // 52
     reviews: [
       {
@@ -23,8 +24,6 @@ const artSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-
 
 const Art = new mongoose.model("Art", artSchema);
 

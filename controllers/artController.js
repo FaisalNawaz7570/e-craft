@@ -20,16 +20,19 @@ exports.addArt = async (req, res) => {
 exports.getArts = async (req, res) => {
   var { role, moreData, ...resQueries } = req.query;
   try {
+    console.log(req.query)
     //modelled query
-    var { role, moreData, ...resQueries } = req.query;
+    var { role, moreData, sort, ...resQueries } = req.query;
+    // 1 filtering
     var queryStr = JSON.stringify(resQueries);
     var query = queryStr.replace(
-      /\b(gt|lt|gte|lte)\b/g,
+      /\b(gt|lt|gte|lte|in)\b/g,
       (match) => `$${match}`
     );
     var queryObj = JSON.parse(query);
+    //2 sorting
     //pass the query
-    var arts = await Art.find(queryObj);
+    var arts = await Art.find(queryObj).sort(sort);
     res.status(200).json({
       status: "success",
       results: arts.length,
