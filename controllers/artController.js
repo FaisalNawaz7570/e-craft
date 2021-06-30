@@ -18,11 +18,10 @@ exports.addArt = async (req, res) => {
   }
 };
 exports.getArts = async (req, res) => {
-  var { role, moreData, ...resQueries } = req.query;
   try {
-    console.log(req.query)
+    console.log(req.query);
     //modelled query
-    var { role, moreData, sort, ...resQueries } = req.query;
+    var { sort, fields, page, limit, ...resQueries } = req.query;
     // 1 filtering
     var queryStr = JSON.stringify(resQueries);
     var query = queryStr.replace(
@@ -30,11 +29,36 @@ exports.getArts = async (req, res) => {
       (match) => `$${match}`
     );
     var queryObj = JSON.parse(query);
-    //2 sorting
-    //pass the query
-    var arts = await Art.find(queryObj).sort(sort);
+    var query = Art.find(queryObj); //promise
+    //sorting
+    if (sort) {
+      sort = sort.split(",").join(" ");
+      query = query.sort(sort); //chain promise
+    } else {
+      query = query.sort("createdAt"); //sort default condition
+    }
+    //fields limiting
+    if (fields) {
+      fields = fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      query = query.select("-__v");
+    }
+    //pagination
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 2;
+    var skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
+    
+    //get query
+    var arts = await query; //promise resolve
+    
+    //finding total number of pages
+    var tatalPages = Math.ceil(await Art.countDocuments() / limit);
+
     res.status(200).json({
       status: "success",
+      pages: tatalPages,
       results: arts.length,
       data: {
         arts,
