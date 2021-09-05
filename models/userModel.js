@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.methods.passwordVerification = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+};
+
 userSchema.pre("save", async function (next) {
   //this -> document
   //TODO ->  check if password changed then do the following
