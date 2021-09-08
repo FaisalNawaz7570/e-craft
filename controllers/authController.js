@@ -33,7 +33,7 @@ exports.signup = async (req, res) => {
     var { password, ...modifiedUser } = user.toObject(); // simple object json
     // generate JWT
     var token = signJWT(user._id);
-    // console.log(user);
+    console.log(user);
     res.status(200).json({
       status: "success",
       token,
