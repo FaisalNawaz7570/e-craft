@@ -20,6 +20,7 @@ exports.addArt = async (req, res) => {
 };
 exports.getArts = async (req, res) => {
   try {
+    // console.log(req.user);
     var { limit = 2 } = req.query;
     var query = new APIFeatures(Art, req.query)
       .filter()

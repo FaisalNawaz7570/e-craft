@@ -4,7 +4,12 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: [true, "user name is required"],
+  },
+  role: {
+    type: String,
+    required: [true, "role is required"],
+    enum: ["artist", "buyer"]
   },
   email: {
     type: String,
@@ -29,6 +34,7 @@ const userSchema = new mongoose.Schema({
       message: "password not match",
     },
   },
+  passwordChangedAt: Date,
 });
 
 userSchema.methods.passwordVerification = async (password, hashedPassword) => {
